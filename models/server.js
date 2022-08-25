@@ -1,4 +1,6 @@
 const express = require('express')
+const cors = require('cors')
+
 
 class Server {
 
@@ -7,6 +9,7 @@ class Server {
         // Creo la app como una propiedad
         this.app = express(); 
         this.port = process.env.PORT; 
+        this.userPath = '/api/users'; 
 
         // MIDDLEWARES: funciones que añaden más funcionalidades a mi web server        
         this.middlewares(); 
@@ -18,41 +21,22 @@ class Server {
     // usaremos muchos!
     middlewares(){
             //Forma en que decimos que usamos un middlewares (.use)
+
+        //CORS:
+        this.app.use( cors() ); 
+        
         // Directorio público
         this.app.use(express.static('public'))
     }
 
-    // Metodo para manejo/def de rutas 
+    // Metodo para manejo/def de rutas s
     routes(){
-       this.app.get('/api', function (req, res) {
-            res.status(200).json({
-                'ok' : true, 
-                'msg' : 'get API'
-            })
-          })
-          this.app.post('/api', function (req, res) {
-            res.status(200).json({
-                'ok' : true, 
-                'msg' : 'post API'
-            })
-          })
-          this.app.put('/api', function (req, res) {
-            res.status(200).json({
-                'ok' : true, 
-                'msg' : 'put API'
-            })
-          })
-          this.app.delete('/api', function (req, res) {
-            res.status(200).json({
-                'ok' : true, 
-                'msg' : 'delete API'
-            })
-          })
+        this.app.use('/api/usuarios', require('../routes/user-route'))
     }
 
     listen(){
         this.app.listen(this.port, ()=>{
-            console.log('El servidor corre en el puerto', this.port );
+            console.log('Se ejecuta en: ', this.port );
         })
     }
 
