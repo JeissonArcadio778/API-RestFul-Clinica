@@ -1,6 +1,6 @@
 //Desestrucuturo y traigo una funcion llamada Route. Sirve para yo configurarle las ruta
-
 const { Router } = require("express");
+
 const {
   usersGet,
   usersPost,
@@ -16,7 +16,7 @@ route.get("/", usersGet);
 
 route.post("/", usersPost);
 
-route.put("/", usersPut);
+route.put("/:id", usersPut);
 
 route.delete("/", usersDelete);
 

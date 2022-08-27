@@ -4,9 +4,6 @@ require('dotenv').config()
 //Express basado en clases. Para ser más organizado.
 const Server = require('./models/server')
 
-// Cors: permite proteger el servidor de una manera superficial. Discrimina quien puede acceder al restAPI. Usualmente siempre se usa el cors 
-
-
 //Instancia para usar el Server. Debo usar los métodos que defino
 const server = new Server(); 
 
