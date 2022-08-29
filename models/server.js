@@ -1,7 +1,8 @@
 const express = require('express')
 // Cors: permite proteger el servidor de una manera superficial. Discrimina quien puede acceder al restAPI. Usualmente siempre se usa el cors.
 
-const cors = require('cors')
+const cors = require('cors');
+const { dbConnection } = require('../database/config');
 
 
 class Server {
@@ -13,11 +14,20 @@ class Server {
         this.port = process.env.PORT; 
         this.userPath = '/api/usuarios'; 
 
+        // COnectar a base de datos
+        this.conectarDB(); 
+
+
         // MIDDLEWARES: funciones que añaden más funcionalidades a mi web server. Aqui se llamaran y ejecutaran       
         this.middlewares(); 
 
         // Disparar las rutas
         this.routes(); 
+    }
+
+    // Conectar db
+    async conectarDB(){
+        await dbConnection(); 
     }
 
                     
