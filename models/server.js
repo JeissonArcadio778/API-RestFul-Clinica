@@ -1,55 +1,55 @@
-const express = require('express')
+const express = require('express'); 
 // Cors: permite proteger el servidor de una manera superficial. Discrimina quien puede acceder al restAPI. Usualmente siempre se usa el cors.
-
 const cors = require('cors');
-const { dbConnection } = require('../database/config');
 
+const { dbConnection } = require('../database/config');
 
 class Server {
 
-    // En JS las propiedades se definen en el constructor
+    // En JS las propiedades se definen en el constructor. Aqui haré el llamado del resto de propiedades
     constructor(){
+
         // Creo la app como una propiedad
         this.app = express(); 
         this.port = process.env.PORT; 
         this.userPath = '/api/usuarios'; 
 
-        // COnectar a base de datos
+        // Conectar a base de datos
         this.conectarDB(); 
 
-
-        // MIDDLEWARES: funciones que añaden más funcionalidades a mi web server. Aqui se llamaran y ejecutaran       
+        // MIDDLEWARES: funciones que añaden más funcionalidades a mi web server. Aqui se llamaran y ejecutaran.     
         this.middlewares(); 
 
         // Disparar las rutas
         this.routes(); 
     }
 
-    // Conectar db
+    // Conectar db. Async debido a que haré una petición con grado de espera
     async conectarDB(){
         await dbConnection(); 
     }
 
-                    
+     //Middleware: Es una función que se ejecuta antes de llamar un controlador o seguir con la ejecucuón de mis peticiones. Funciones que se realizar antes de hacer un llamado.
     middlewares(){ // usaremos muchos!
 
         //Forma en que decimos que usamos un middlewares (.use)
 
-        //CORS
+        //CORS:
         this.app.use( cors() ); 
         
         //Directorio público. Se usa para cargar los archos que quiero mostrar por ejemplo en el LOCAL HOST
         this.app.use(express.static('public'))
 
-        //Traer JSONs. Para reconocer la respuesta como un archivo JSON
+        //Traer JSONs. Para reconocer la respuesta como un archivo JSON. 
         this.app.use( express.json() )
     }
 
-    // Metodo para manejo/def de rutas s
+    // Metodo para manejo/def de rutas 
     routes(){
         this.app.use(this.userPath, require('../routes/user-route'))
     }
 
+    // Hacia donde va a mirar o escuchar el RestServer
     listen(){
         this.app.listen(this.port, ()=>{
             console.log('Se ejecuta en: ', this.port );
