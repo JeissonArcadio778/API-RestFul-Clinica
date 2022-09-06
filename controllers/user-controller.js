@@ -7,21 +7,44 @@ const bcrypt = require("bcryptjs");
 // Estandar: crearemos instancias del modelo.
 const Usuario = require("../models/usuario");
 
-// METODO GET:
-const usersGet = (req = request, res = response) => {
-
+// METODO GET: servicio para traerme todo de la base de datos
+const usersGet = async (req = request, res = response) => {
   // Los argumentos enviado en la HTTP con signo de interrogación son considerados como opcionales. Express me los parsea.
+  const { limit = 5, desde = 0 } = req.query;
 
-  const { q, nombre = "no name", apikey } = req.query;
+  const queryModify = { state: true };
+
+  // Get de todos los users:
+  // const allUsers = await Usuario.find();
+
+  // Podemos limitar el numero de usaer del llamado. Debo hacer el casteo! Filtro de USER = ESTADO = TRUE
+  // const allUsers = await Usuario.find(queryModify)
+  //   .skip(Number(desde))
+  //   .limit(Number(limit));
+
+  // Esto me retornará el total de registros que tenga en la colección users
+
+  // const totalUsers = await Usuario.countDocuments(queryModify);
+
+  // Debo tener presente los tiempos de demora de mi código.
+  // Promise.all([]): me permite enviar un arreglo que ejecute las promesas que quiero. Las EJECUTA DE MANERA SIMULTANEA
+
+  const [totalUsers, users] = await Promise.all([
+    Usuario.countDocuments(queryModify),
+    Usuario.find(queryModify).skip(Number(desde)).limit(Number(limit)),
+  ]);
+
   res.json({
-    msg: "get API - controller",
-    q,
-    nombre,
-    apikey,
+    msg: "get API - controller - get users",
+    // q,
+    // nombre,
+    // apikey,
+    totalUsers,
+    users,
   });
 };
 
-//METODO POST: 
+//METODO POST: CREAR USUARIOS
 const usersPost = async (req, res = response) => {
   // Pequeña desestructuracion y validación. Recoger datos del body. Cuidadeo con los required.
   // const {name, id} = req.body;
@@ -38,7 +61,7 @@ const usersPost = async (req, res = response) => {
 
   // VALIDAR LOS ENDPOINDS DE LA MEJOR MANERA
   res.json({
-    msg: "Post API - controller",
+    msg: "Post API - controller - Created user",
     usuario,
   });
 };
@@ -47,15 +70,14 @@ const usersPost = async (req, res = response) => {
 
 // Hay cierto tipo de validaciones. Cuando no envian info, misma info a update, etc. Actualizar contra: volver a manipular el hash
 
-
 const usersPut = async (req = request, res = response) => {
   // Poner datos anviados desde el path. Enviarlos, pero no actualizarlos
   const { id } = req.params;
 
-  // sacar lo que no quiero actualizar: 
-  const {password, google,...forUpdate} = req.body; 
+  // sacar lo que no quiero actualizar:
+  const { _id, password, google, ...forUpdate } = req.body;
 
-  //TODO:Si alguien quiere actu algo, debo validar que eso exista 
+  //TODO:Si alguien quiere actu algo, debo validar que eso exista
 
   //Encriptar nuevamente la contra
   if (password) {
@@ -65,19 +87,31 @@ const usersPut = async (req = request, res = response) => {
   // Actualizar este resgistro mediante ID
 
   // The third param is to allow the return of the new object into the DB - after update. Para que la funcion retorn el nuevo usuario actualizado
-  const usuarioDB = await Usuario.findByIdAndUpdate(id, forUpdate,{new:true}); 
-  
+  const usuarioDB = await Usuario.findByIdAndUpdate(id, forUpdate, {
+    new: true,
+  });
+
   // Debo hacer validaciones de _id de mongo
 
   // Transformar la respues a JSON
   res.json({
-    msg: "Put API - controller",
-    usuarioDB
+    msg: "Put API - controller - Update DB",
+    usuarioDB,
   });
 };
-const usersDelete = (req, res = response) => {
+const usersDelete = async (req, res = response) => {
+  // Saco el Id de los parametros de la request
+  const {id} = req.params;
+  
+  // Borrado físico: No es recomendado porque si ese usuario ha hecho cosas, perdemos la identidad refencial =(
+  // const userDeleted = await Usuario.findByIdAndDelete(id); 
+
+  const userDeleted = await Usuario.findByIdAndUpdate(id, {state:false})
+
+
   res.json({
-    msg: "Delete API - controller",
+    msg: "Delete API - controller -  User Deleted!",
+    userDeleted,
   });
 };
 const usersPatch = (req, res = response) => {

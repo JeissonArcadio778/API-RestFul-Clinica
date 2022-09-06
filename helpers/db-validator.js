@@ -19,7 +19,16 @@ const validateEmail = async (email) => {
     throw new Error(`El email ${email} ya existe`);
   }
 };
+
+//Verificar si existe el usuario existe en la DB
+const validateUserDBById = async (id) => {
+  const userExists = await Usuario.findById(id);
+  if (!userExists) {
+    throw new Error(`The user with ID: ${id} not exists`);
+  }
+};
 module.exports = {
   esRoleValido,
-  validateEmail
+  validateEmail, 
+  validateUserDBById
 };
