@@ -49,8 +49,7 @@ const validateDelete = [
   validarCampos
 ]
 
-// const {validarDuplicadoEmail, ...validarPost} = validarInputs; 
-
+// const {validarDuplicadoEmail, ...validarPost} = validarInputs;
 route.get("/", usersGet);
 
 // Este check va preparando los errores. Está creando en la request todos los errores que esos middleware van creando. En controles ya se confirman.
@@ -62,4 +61,5 @@ route.delete("/:id", validateDelete, usersDelete);
 
 route.patch("/", usersPatch);
 
+//Lo estoy llamando desde routes
 module.exports = route;

@@ -8,11 +8,11 @@ class Server {
 
     // En JS las propiedades se definen en el constructor. Aqui haré el llamado del resto de propiedades
     constructor(){
-
         // Creo la app como una propiedad
         this.app = express(); 
         this.port = process.env.PORT; 
         this.userPath = '/api/usuarios'; 
+        this.authPath = '/api/auth'; 
 
         // Conectar a base de datos
         this.conectarDB(); 
@@ -46,7 +46,10 @@ class Server {
 
     // Metodo para manejo/def de rutas 
     routes(){
+        // Las rutas que queremos usar de acuerdo al path. Siempre ordenar afabéticamente
+        this.app.use(this.authPath, require('../routes/auth-route'))
         this.app.use(this.userPath, require('../routes/user-route'))
+
     }
 
     // Hacia donde va a mirar o escuchar el RestServer

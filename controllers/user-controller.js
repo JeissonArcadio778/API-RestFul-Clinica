@@ -99,21 +99,22 @@ const usersPut = async (req = request, res = response) => {
     usuarioDB,
   });
 };
+
+// 'Delete a user'
 const usersDelete = async (req, res = response) => {
   // Saco el Id de los parametros de la request
-  const {id} = req.params;
-  
+  const { id } = req.params;
+
   // Borrado físico: No es recomendado porque si ese usuario ha hecho cosas, perdemos la identidad refencial =(
-  // const userDeleted = await Usuario.findByIdAndDelete(id); 
-
-  const userDeleted = await Usuario.findByIdAndUpdate(id, {state:false})
-
-
+  // const userDeleted = await Usuario.findByIdAndDelete(id);
+  const userDeleted = await Usuario.findByIdAndUpdate(id, { state: false });
+  
   res.json({
     msg: "Delete API - controller -  User Deleted!",
     userDeleted,
   });
 };
+
 const usersPatch = (req, res = response) => {
   res.json({
     msg: "get API - controller",
