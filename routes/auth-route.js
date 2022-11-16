@@ -1,11 +1,10 @@
-
 const { Router } = require('express'); 
 const { body, param } = require("express-validator");
 
 const { login } = require('../controllers/auth-controller');
 const { validarCampos } = require('../middlewares/validar-campos')
 
-const route = Router();
+const router = Router();
 
 // Validations
 const validateLogin = [
@@ -17,7 +16,7 @@ const validateLogin = [
   ]
 
 // Routes - Router
-route.post("/login", validateLogin, login); 
+router.post("/login", validateLogin, login); 
 
 // porque es lo que voy a exportar
-module.exports = route; 
+module.exports = router; 

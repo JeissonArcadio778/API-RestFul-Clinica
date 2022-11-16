@@ -36,11 +36,13 @@ const UsuarioSchema = Schema({
 //Puedo crear metodos personalizados: 
 
 //Voy a sacar el password de la res. Debo ocultarla. No es seguro si la muestro
-UsuarioSchema.methods.toJSON = function(){
+UsuarioSchema.methods.toJSON = function() {
   // Destructuración del objeto- Cambio nombre variable
   const {__v, password, _id:uid,...user} = this.toObject();
 
   // cambio nombre de variable  
+  // user.uid = _id 
+  // return user
   
   return {
     uid, ...user

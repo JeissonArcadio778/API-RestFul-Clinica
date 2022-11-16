@@ -7,9 +7,14 @@ const {
   usersPost,
   usersPut,
   usersDelete,
-  usersPatch,
 } = require("../controllers/user-controller");
+
 const { validarCampos } = require("../middlewares/validar-campos");
+const { validarJWT } = require("../middlewares/validar-jwt");
+const { isAdminRole, isRole } = require("../middlewares/validar-rol");
+
+
+
 const { esRoleValido, validateEmail,validateUserDBById } = require("../helpers/db-validator");
 
 // llamo la funcion y creo una instancia
@@ -44,7 +49,11 @@ const validatesPut = [
 ]
 
 const validateDelete = [
+  validarJWT,
+  // isAdminRole,
+  isRole('ADMIN_ROLE', 'SALES_ROLE'),
   param('id', 'No es un ID válido').isMongoId(),
+  // Esto que hace:
   param('id').custom((id)=> validateUserDBById(id)), 
   validarCampos
 ]
@@ -58,8 +67,6 @@ route.post("/", validarInputs, usersPost);
 route.put("/:id", validatesPut, usersPut);
 
 route.delete("/:id", validateDelete, usersDelete);
-
-route.patch("/", usersPatch);
 
 //Lo estoy llamando desde routes
 module.exports = route;

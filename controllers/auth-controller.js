@@ -6,13 +6,12 @@ const bcrypt = require("bcryptjs");
 
 const Usuario = require('../models/usuario');
 const { generateJWT } = require('../helpers/generate-jwt');
-const usuario = require('../models/usuario');
 
 
 // Estos métodos son funciones realmente
 const login =  async (req = request, res = response) =>{
 
-    const {email, password } = req.body; 
+    const {email, password} = req.body; 
 
     try {
 
@@ -22,7 +21,7 @@ const login =  async (req = request, res = response) =>{
         // validar Email
         if (!userValidations) {
             return res.status(400).json({
-                msg: 'Email / password doesnt correct - email'
+                msg: `Email / password doesnt correct - email - ${email}`
             })
         }
 
@@ -57,7 +56,8 @@ const login =  async (req = request, res = response) =>{
         console.log(error);
         // 500: server Error!
         return res.status(500).json({
-            msg: 'Talk with admin'
+            msg: 'Talk with admin',
+
         })
     }
 

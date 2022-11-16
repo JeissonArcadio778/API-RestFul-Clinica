@@ -23,9 +23,7 @@ const usersGet = async (req = request, res = response) => {
   //   .limit(Number(limit));
 
   // Esto me retornará el total de registros que tenga en la colección users
-
   // const totalUsers = await Usuario.countDocuments(queryModify);
-
   // Debo tener presente los tiempos de demora de mi código.
   // Promise.all([]): me permite enviar un arreglo que ejecute las promesas que quiero. Las EJECUTA DE MANERA SIMULTANEA
 
@@ -105,19 +103,22 @@ const usersDelete = async (req, res = response) => {
   // Saco el Id de los parametros de la request
   const { id } = req.params;
 
+  // Se envia desde el body como options
+  // const uid = req.uid;
+
   // Borrado físico: No es recomendado porque si ese usuario ha hecho cosas, perdemos la identidad refencial =(
   // const userDeleted = await Usuario.findByIdAndDelete(id);
   const userDeleted = await Usuario.findByIdAndUpdate(id, { state: false });
-  
+  // Obtener el user autenticado. Imprimir el user y el user autenticado.
+  // const userAuthe = await Usuario.findById(uid);
+
+  // console.log({userDeleted, userAuthe});
+
   res.json({
     msg: "Delete API - controller -  User Deleted!",
     userDeleted,
-  });
-};
-
-const usersPatch = (req, res = response) => {
-  res.json({
-    msg: "get API - controller",
+    // uid
+    // userAuthe,
   });
 };
 
@@ -126,5 +127,4 @@ module.exports = {
   usersPut,
   usersPost,
   usersDelete,
-  usersPatch,
 };
