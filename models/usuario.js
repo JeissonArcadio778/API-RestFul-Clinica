@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, default: mongoose } = require("mongoose");
 
 // Obj: para crear una tabla* pero aqui es un modelo
 const UsuarioSchema = Schema({
@@ -31,8 +31,9 @@ const UsuarioSchema = Schema({
   google: {
     type: Boolean,
     default: false,
-  },
+  }
 });
+
 //Puedo crear metodos personalizados: 
 
 //Voy a sacar el password de la res. Debo ocultarla. No es seguro si la muestro

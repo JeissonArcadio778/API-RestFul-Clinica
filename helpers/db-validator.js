@@ -1,5 +1,6 @@
 // Vamos a optimizar el código
 
+const Category = require("../models/category");
 const Role = require("../models/role");
 const Usuario = require('../models/usuario')
 
@@ -27,8 +28,18 @@ const validateUserDBById = async (id) => {
     throw new Error(`The user with ID: ${id} not exists`);
   }
 };
+
+//Verify if the id category is registered in the DB
+
+const categoryDBValidation = async (id)=>{
+  const categoryExists = await Category.findById(id); 
+  if (!categoryExists) {
+    throw new Error(`The category with ID: ${id} not exists`);
+  }
+}
 module.exports = {
   esRoleValido,
   validateEmail, 
-  validateUserDBById
+  validateUserDBById, 
+  categoryDBValidation
 };

@@ -10,9 +10,13 @@ class Server {
     constructor(){
         // Creo la app como una propiedad
         this.app = express(); 
-        this.port = process.env.PORT; 
-        this.userPath = '/api/usuarios'; 
-        this.authPath = '/api/auth'; 
+        this.port = process.env.PORT;
+        
+        this.paths = {
+            user: '/api/usuarios', 
+            auth : '/api/auth', 
+            categories : '/api/categories'
+        }
 
         // Conectar a base de datos
         this.conectarDB(); 
@@ -37,7 +41,7 @@ class Server {
         //CORS:
         this.app.use( cors() ); 
         
-        //Directorio público. Se usa para cargar los archos que quiero mostrar por ejemplo en el LOCAL HOST
+        //Directorio público. Se usa para cargar los archivos que quiero mostrar por ejemplo en el LOCAL HOST
         this.app.use(express.static('public'))
 
         //Traer JSONs. Para reconocer la respuesta como un archivo JSON. 
@@ -47,8 +51,9 @@ class Server {
     // Metodo para manejo/def de rutas 
     routes(){
         // Las rutas que queremos usar de acuerdo al path. Siempre ordenar afabéticamente
-        this.app.use(this.authPath, require('../routes/auth-route'))
-        this.app.use(this.userPath, require('../routes/user-route'))
+        this.app.use(this.paths.auth, require('../routes/auth-route'))
+        this.app.use(this.paths.user, require('../routes/user-route'))
+        this.app.use(this.paths.categories, require('../routes/categories-route'))
 
     }
 
