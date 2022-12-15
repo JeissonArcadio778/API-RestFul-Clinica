@@ -11,6 +11,7 @@ const { categoryDBValidation } = require("../helpers/db-validator");
 
 const { validarCampos } = require("../middlewares/validar-campos");
 const { validarJWT } = require("../middlewares/validar-jwt");
+const { isAdminRole } = require("../middlewares/validar-rol");
 
 const router = Router();
 
@@ -39,7 +40,7 @@ router.put(
 //Delete a category
 router.delete(
   "/:id",
-  [validarJWT, param("id", "No es un ID válido").isMongoId(), validarCampos],
+  [validarJWT, param("id", "No es un ID válido").isMongoId(), isAdminRole, validarCampos],
   deleteCategory
 );
 

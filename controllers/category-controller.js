@@ -19,12 +19,12 @@ const getCategory = async (req = request, res = response) => {
       .populate('user', 'name'),
   ]);
   
-  Category.findOne({ user: categories[0].user })
-    .populate("user")
-    .exec(function (err, category) {
-      if (err) return handleError(err);
-      console.log("The author is %s", category.user.name);
-    });
+  // Category.findOne({ user: categories[0].user })
+  //   .populate("user")
+  //   .exec(function (err, category) {
+  //     if (err) return handleError(err);
+  //     console.log("The author is %s", category.user.name);
+  //   });
 
   res.json({
     message: "API get - total users",
@@ -87,6 +87,7 @@ const updateCategory = async (req = request, res = response) => {
   let {_id, name, ...forUpdatedBody} = req.body; 
   name = req.body.name.toUpperCase();
   forUpdated = {name, ...forUpdatedBody}
+
   // console.log({name});
   // console.log({forUpdated});
 

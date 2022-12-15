@@ -15,7 +15,8 @@ class Server {
         this.paths = {
             user: '/api/usuarios', 
             auth : '/api/auth', 
-            categories : '/api/categories'
+            categories : '/api/categories', 
+            products: '/api/products'
         }
 
         // Conectar a base de datos
@@ -51,9 +52,10 @@ class Server {
     // Metodo para manejo/def de rutas 
     routes(){
         // Las rutas que queremos usar de acuerdo al path. Siempre ordenar afabéticamente
-        this.app.use(this.paths.auth, require('../routes/auth-route'))
-        this.app.use(this.paths.user, require('../routes/user-route'))
-        this.app.use(this.paths.categories, require('../routes/categories-route'))
+        this.app.use(this.paths.auth, require('../routes/auth.routes'))
+        this.app.use(this.paths.user, require('../routes/user.routes'))
+        this.app.use(this.paths.categories, require('../routes/categories.routes'))
+        this.app.use(this.paths.products, require('../routes/products.routes'))
 
     }
 
