@@ -6,25 +6,18 @@ const Usuario = require("../models/usuario");
 // Get category - paginado - total - populate:
 
 const getCategory = async (req = request, res = response) => {
-  console.log("Get categories: ");
+
   const { limit = 5, from = 0 } = req.query;
 
   const queryModify = { status: true };
 
   const [totalCategories, categories] = await Promise.all([
-    Category.countDocuments(queryModify),
+    Category.countDocuments(queryModify)],
     Category.find(queryModify)
       .skip(Number(from))
       .limit(Number(limit))
       .populate('user', 'name'),
-  ]);
-  
-  // Category.findOne({ user: categories[0].user })
-  //   .populate("user")
-  //   .exec(function (err, category) {
-  //     if (err) return handleError(err);
-  //     console.log("The author is %s", category.user.name);
-  //   });
+  );
 
   res.json({
     message: "API get - total users",
