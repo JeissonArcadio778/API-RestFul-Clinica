@@ -43,20 +43,35 @@ const createProducts = async (req = request, res = response) => {
 //Update products
 const updateProducts = async (req = request, res = response) => {
 
-    const {status, uid, _id, name, ...forUpdate} = req.body; 
+    try {
 
-    //Validacion de que exista ese product
-    const {id} = req.params; 
-    const existProduct = await Product.findById(id); 
-    if (!existProduct) {
-        return res.status(400).json({
-            message: "The product not exits",
-          });
+        const { id } = req.params;
+
+        let {_id, uid, name, ...forUpdatedBody} = req.body; 
+        name = req.body.name.toUpperCase();
+        forUpdated = {name, ...forUpdatedBody}
+
+        const existProduct = await Product.findById(id); 
+        if (!existProduct) {
+            return res.status(400).json({
+                message: "The product not exits",
+              });
+        }
+    
+        const productUpdated = await Product.findByIdAndUpdate(id, forUpdated, {new:true}).populate('user', 'name').populate('category','name');
+        ; 
+    
+        res.json({
+            message: 'Updated!', 
+            category: productUpdated
+          })
+        
+    } catch (error) {
+        console.log(error);
+        res.json({
+        message: 'Error'
+        })
     }
-
-    const productUpdated = await Product.findByIdAndUpdate({id,})
-
-
 
 
 
