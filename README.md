@@ -66,4 +66,8 @@ Podemos manipular la fecha para hacerlo que expire en determinada fecha.
 # Debemos proteger las rutas 
  Solo se puede ejecutar si tiene Json Web Token Válido. Por ejemplo, no se puede permitir que cualquier persona entre a la ruta de borrar usuario.
 
- 
+ # Introducción a los WEB SOCKETS: 
+
+ - ¿Qué son los Web Sockets? 
+
+ - ¿Para qué sirven los Web Sockets? 
