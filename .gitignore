@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # Logs
 logs
 *.log
@@ -7,6 +5,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+.env
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -104,4 +103,3 @@ dist
 
 # TernJS port file
 .tern-port
->>>>>>> 528197209a1e392e87832e1b8b7e7aa5546de33b
