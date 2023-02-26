@@ -7,25 +7,14 @@ const UserModel = require("../models/user");
 
 const getUsers = async (req = request, res = response) => {
 
-      // const { limit = 5, from = 0 } = req.query;
+      const { limit = 5, from = 0 } = req.query;
 
-      // const queryModify = { status: true };
+      const queryModify = { status: true };
   
-      // const [totalUsers, users] = await Promise.all([
-      //     UserModel.countDocuments(queryModify),
-      //     UserModel.find(queryModify).skip(Number(from)).limit(Number(limit)),
-      // ]);
-
-      //Paginacion
-      const {limit = 5, from = 0} = req.query;
-                
-      //Only true 
-      const queryModify = {status: true}; 
-
-      const [total_count_users] = await Promise.all([UserModel.countDocuments(queryModify)]);
-
-      const users = await UserModel.find(queryModify).skip(Number(from)).limit(Number(limit)).populate('medical_history'); 
-      
+      const [total_count_users, users] = await Promise.all([
+          UserModel.countDocuments(queryModify),
+          UserModel.find(queryModify).skip(Number(from)).limit(Number(limit)).populate('eps', 'status'),
+      ]);
 
       res.json({
         message: "Get users from DB", 
@@ -34,12 +23,26 @@ const getUsers = async (req = request, res = response) => {
       });
 };
 
+const getUserById = async (req = request, res = response) => {
+        
+      const { id } = req.params;
+
+      const user = await UserModel.findById(id).populate('eps', 'status');
+
+      res.json({
+        message: "Get user by Id",
+        "User": user,
+      });
+};
 
 const createUser = async (req, res = response) => {
 
-      const { name, password, email, role, cedula } = req.body;
+      const { first_name, last_name, password, age, email, date_of_birth, marital_status, occupation, gender, nationality, address,status, role, cedula, eps} = req.body;
+      
+      // Use cedula like _id: 
       _id = cedula; 
-      const user = new UserModel({ name, email, password, role, _id, cedula});
+
+      const user = await new UserModel({ _id, first_name, last_name, password, age, email, date_of_birth, marital_status, occupation, gender, nationality, address, status, role, cedula, eps,});
 
       const salt = bcrypt.genSaltSync();
       
@@ -58,7 +61,7 @@ const updateUser = async (req = request, res = response) => {
 
       try {
         
-            const { cedula_param } = req.params;
+            const { id } = req.params;
 
             const { _id, password, cedula, ...forUpdate } = req.body;
 
@@ -68,8 +71,10 @@ const updateUser = async (req = request, res = response) => {
               forUpdate.password = bcrypt.hashSync(password, salt);
             
             }
+            
+            console.log({id});
 
-            const userUpdated = await UserModel.findOneAndUpdate({cedula_param}, forUpdate, { new: true });
+            const userUpdated = await UserModel.findByIdAndUpdate(id, forUpdate, { new: true });
            
             if (!userUpdated) {
               throw new Error('User Updating in the DB failed')
@@ -112,6 +117,7 @@ const deleteUser = async (req, res = response) => {
 
 module.exports = {
   getUsers,
+  getUserById,
   updateUser,
   createUser,
   deleteUser,

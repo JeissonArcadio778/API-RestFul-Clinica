@@ -1,37 +1,85 @@
 const {Schema, model, SchemaType, default: mongoose} = require('mongoose'); 
 
 const MedicalHistorySchema = Schema({
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    eps: {
-        type: Schema.Types.ObjectId, 
-        ref: 'Eps', 
-        required: true,
-        default: "Sin EPS"
-    },
-    antecedentes : {
-        type: String, 
-        required: "No hay antecedentes en consulta"
-    },
-    medicamentos : {
-        type: String, 
-        default: "No registró en consulta"
-    },   
-    hallazgos_consulta : {
-        type: String,
-        default: 'No hay hallazgos en consulta'
-    },
-    ordenes: {
-        type: String,
-        default: 'No hay ordenes en consulta'
-    },
-    available: {
-        type: Boolean, 
-        default: true
-    }
+        user: {
+            type: Schema.Types.String,
+            ref: 'User',
+            required: true
+        },
+        
+        specialty: {
+            type: Schema.Types.String,
+            ref: 'Specialty',
+            required: true
+        },
+
+        doctor: {
+            type: Schema.Types.String,
+            ref: 'User',
+        },
+        reason_for_hospitalization: {
+            type: String,
+        },
+        
+        current_disease: {
+            type: String
+        },
+        
+        history_current_disease: {
+            type: String
+        },
+
+        family_history: {
+            type: String
+        },
+
+        personal_history : [{
+            "habits": String,
+            "smoker": String,
+            "drugs": String
+        }],
+        
+        physiological_habits : [
+            {
+                "feeding": String,
+                "sleep": String,
+                "exercise" : String,
+                "allergies": String
+            }
+        ],
+        
+        consultation_findings : {
+            type: String,
+        },
+        
+        medical_orders: {
+            type: String,
+        },
+
+        status: {
+            type: Boolean, 
+            default: true
+        }, 
+
+        physical_test : [{
+
+            "temperature": Number,
+            "height" : Number,
+            "weight" : Number,
+            "general_impression" : String,
+            "skin_system" : String,
+            "head": String,
+            "respiratory": String,
+            "Neurological" : String
+        }],
+        laboratory_exams: [{
+            "hto" : Number,
+            "leucosites" : String
+        }],
+        syndromic_diagnosis : String
+},{
+    timestamps: true, 
+    versionKey: false
 }); 
 
 MedicalHistorySchema.methods.toJSON = function() {

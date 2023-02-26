@@ -38,6 +38,8 @@ const validateJWT = async (req = request, res = response, next) => {
 
               }
 
+              console.log("Token is valid");
+
               req.userAuth = userAuth; 
 
       } catch (error) {

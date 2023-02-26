@@ -57,13 +57,24 @@ const isUserValid = async (cedula) => {
 };
 
 
-const isEpsValid = async (id)=>{
+const isEpsValid = async ( eps ) => {
 
-      const isEpsInDB = await EpsModel.findById(id); 
+      const isEpsInDB = await EpsModel.findById(eps); 
   
       if (!isEpsInDB) {
+                        
+            throw new Error(`The EPS with ${eps} there is not in the DB. Please contact the clinic`);
+                  
+      }
+}
+
+const isSpecialtyValid = async (specialty)=>{
+
+      const isSpecialtyInDB = await EpsModel.findById(specialty); 
+  
+      if (!isSpecialtyInDB) {
             
-          throw new Error(`The EPS with ID: ${id} there is not in the DB`);
+          throw new Error(`The specialty ${specialty} there is not in the DB. Please contact the clinic`);
       
       }
 
@@ -74,5 +85,6 @@ module.exports = {
    isEmailValid, 
    isUserValid, 
    isEpsValid,
-   isCedulaParmValid
+   isCedulaParmValid,
+   isSpecialtyValid
 };

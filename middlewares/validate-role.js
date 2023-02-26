@@ -4,15 +4,15 @@ const isAdminRole = (req = request, res = response, next) => {
 
     if (!req.userAuth) {
         return res.status(500).json({   
-            msg: 'Se quiere verificar el Role sin verificar el Token primero'
+            message: 'check the Role without checking the Token first'
         }) 
     }
 
-    const {role, name} = req.userAuth; 
+    const {role, cedula} = req.userAuth; 
     
-    if(role !== 'ADMIN_ROLE'){
+    if(role !== 'ADMIN' && role !== 'DOCTOR' && role !=='NURSE'){
         return res.status(401).json({
-            msg: `${name} no es admin`
+            msg: `The user with cedula ${cedula} is not admin/doctor/nurse`
         })
     }
 

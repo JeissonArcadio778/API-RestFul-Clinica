@@ -1,8 +1,7 @@
 const { Router } = require("express");
 const { body,param } = require("express-validator");
 
-const { updateEps, deleteEps } = require("../controllers/eps-controller");
-const { getMedicalHistories, createMedicalHistory } = require("../controllers/medical-history-controller");
+const { updateEps, deleteEps, getEps, getEpsById, createEps } = require("../controllers/eps-controller");
 
 const { isEpsValid } = require("../helpers/db-validator");
 
@@ -13,16 +12,14 @@ const { isAdminRole } = require("../middlewares/validate-role");
 const router = Router();
 
 //Get eps - public
-router.get("/", [validateFields]);
+router.get("/", [validateFields], getEps);
 
-router.get("/:id", [param("id", "No es un ID válido").isMongoId(), validateFields], getMedicalHistories);
+router.get("/:id", [param("id").custom( (id) => isEpsValid(id)), validateFields], getEpsById);
 
-router.post("/", [validateJWT, body("name", "The name is required").notEmpty(), validateFields], createMedicalHistory
-);
+router.post("/", [validateJWT, body("name", "The name is required").notEmpty(), validateFields], createEps);
 
-router.put("/:id",[validateJWT, param("id", "No es un ID válido").isMongoId(), param('id').custom((id)=> isEpsValid(id)), body('name', 'The name is requied').notEmpty(), validateFields], updateEps
-);
+router.put("/:id",[validateJWT, param('id').custom((id)=> isEpsValid(id)), body("name", "The name is required").notEmpty(), validateFields], updateEps, updateEps);
 
-router.delete("/:id", [validateJWT, param("id", "No es un ID válido").isMongoId(), isAdminRole, validateFields], deleteEps);
+router.delete("/:id", [validateJWT, param('id').custom((id)=> isEpsValid(id)), isAdminRole, validateFields], deleteEps);
 
 module.exports = router;

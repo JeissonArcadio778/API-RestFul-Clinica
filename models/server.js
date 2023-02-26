@@ -16,6 +16,7 @@ class Server {
             auth : '/api/auth', 
             eps : '/api/eps', 
             medical_history: '/api/medical_history',
+            specialty: '/api/specialty',
             search: '/api/search',
         }
 
@@ -51,6 +52,8 @@ class Server {
         this.app.use(this.paths.eps, require('../routes/eps.routes'))
         this.app.use(this.paths.medical_history, require('../routes/medical-history.routes'))
         this.app.use(this.paths.search, require('../routes/search.routes'))
+        this.app.use(this.paths.specialty, require('../routes/specialty.routes'))
+
     }
 
     listen(){

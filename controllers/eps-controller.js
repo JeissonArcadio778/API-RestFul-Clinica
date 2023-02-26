@@ -1,9 +1,7 @@
 const { request, responses, response } = require("express");
 const { default: mongoose } = require("mongoose");
 const EpsModel = require("../models/eps");
-const UserModel = require("../models/user");
 
-// Get EPS - Paginado - total - populate:
 
 const getEps = async (req = request, res = response) => {
 
@@ -11,14 +9,12 @@ const getEps = async (req = request, res = response) => {
 
         const queryModify = { status: true };
 
-        const [totalCountEps, listEps] = await Promise.all([
-          EpsModel.countDocuments(queryModify)],
-          EpsModel.find(queryModify)
-            .skip(Number(from))
-            .limit(Number(limit))
-            .populate('user', 'name'),
+        let [totalCountEps] = await Promise.all([
+          EpsModel.countDocuments(queryModify)]
         );
 
+        listEps = await EpsModel.find(queryModify).skip(Number(from)).limit(Number(limit)).populate('user', 'name')
+       
         res.json({
           message: "Get EPS & total count EPS",
           "Total count EPS": totalCountEps,
@@ -33,7 +29,7 @@ const getEpsById = async (req = request, res = response) => {
           const eps = await EpsModel.findById(id).populate('user', 'name');
 
           res.json({
-            message: " Get EPS by Id: ",
+            message: "Get EPS by Id: ",
             "Eps": eps,
           });
 };
@@ -42,6 +38,9 @@ const createEps = async (req = request, res = response) => {
     
           const name = req.body.name.toUpperCase();
 
+          // Usar como clave el nombre
+          _id = name; 
+          
           const isEpsInDB = await EpsModel.findOne({ name });
 
           if (isEpsInDB) {
@@ -51,9 +50,12 @@ const createEps = async (req = request, res = response) => {
               });
           
             }
+            
+          
 
           try {
-                const data = { name, user: req.userAuth._id };
+                const data = { name, _id};
+
                 const eps = new EpsModel(data);
                 
                 await eps.save();
