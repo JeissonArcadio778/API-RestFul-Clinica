@@ -2,42 +2,29 @@
 const { Router } = require("express");
 const { body, param } = require("express-validator");
 
-const {
-  usersGet,
-  usersPost,
-  usersPut,
-  usersDelete,
-} = require("../controllers/user-controller");
+const { createUser, getUsers, updateUser, deleteUser } = require("../controllers/user-controller");
 
-const { validarCampos } = require("../middlewares/validar-campos");
-const { validarJWT } = require("../middlewares/validar-jwt");
-const { isAdminRole, isRole } = require("../middlewares/validar-rol");
+const { validateFields } = require("../middlewares/validate-fields");
+const { validateJWT } = require("../middlewares/validate-jwt");
+const { isAdminRole, isRole } = require("../middlewares/validate-role");
 
 
 
-const { esRoleValido, validateEmail,validateUserDBById } = require("../helpers/db-validator");
+const { isRoleValid, isEmailValid,isUserValid } = require("../helpers/db-validator");
 
-// llamo la funcion y creo una instancia
-const route = Router();
+const router = Router();
 
-// let validarDuplicadoEmail; 
-
-const validarInputs = [
-
+const validateInputs = [
   body("name", "El nombre es obligatorio").not().isEmpty(),
   body("email", "El email no es valido").isEmail(),
-  // Valido si existe el email
-  body('email').custom( (email) => validateEmail(email)),
+  body('email').custom( (email) => isEmailValid(email)),
   body('password', 'El password es obligatorio').notEmpty(),
   body('password', 'El password debe ser más de 6 letras').isLength({min:6}),
-  // body('role', 'No es un role valido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
-   //Podemos validarlo contra una expresion regular para validar carateres especiales, mayusculas, etc. 
-   body('role').custom( (role) => esRoleValido(role) ), //.custom(esRoleValido)
-  //  Esta funcion es para validar los campos
-  validarCampos
+  body('role').custom( (role) => isRoleValid(role) ),
+  validateFields
 ];
 
-const validatesPut = [
+const validateUpdate = [
   body("name", "El nombre es obligatorio").not().isEmpty(),
   body("email", "El email no es valido").isEmail(),
   body('password', 'El password es obligatorio').notEmpty(),
@@ -45,28 +32,23 @@ const validatesPut = [
   body('role').custom( (role) => esRoleValido(role) ),
   param('id', 'No es un ID válido').isMongoId(),
   param('id').custom((id)=> validateUserDBById(id)), 
-  validarCampos
+  validateFields
 ]
 
 const validateDelete = [
-  validarJWT,
-  // isAdminRole,
+  validateJWT,
   isRole('ADMIN_ROLE', 'SALES_ROLE'),
   param('id', 'No es un ID válido').isMongoId(),
-  // Esto que hace:
   param('id').custom((id)=> validateUserDBById(id)), 
-  validarCampos
+  validateFields
 ]
 
-// const {validarDuplicadoEmail, ...validarPost} = validarInputs;
-route.get("/", usersGet);
+router.get("/", getUsers);
 
-// Este check va preparando los errores. Está creando en la request todos los errores que esos middleware van creando. En controles ya se confirman.
-route.post("/", validarInputs, usersPost);
+router.post("/", validateInputs, createUser);
 
-route.put("/:id", validatesPut, usersPut);
+router.put("/:id", validateUpdate, updateUser);
 
-route.delete("/:id", validateDelete, usersDelete);
+router.delete("/:id", validateDelete, deleteUser);
 
-//Lo estoy llamando desde routes
-module.exports = route;
+module.exports = router;

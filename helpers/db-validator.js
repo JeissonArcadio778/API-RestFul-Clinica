@@ -1,45 +1,61 @@
-// Vamos a optimizar el código
-
-const Category = require("../models/category");
+const EpsModel = require("../models/eps");
 const Role = require("../models/role");
-const Usuario = require('../models/usuario')
+const UserModel = require('../models/user')
 
-// Verifiacr si el role existe en la db
-const esRoleValido = async (role = "") => {
-  //Debo hacer una validación de si existe o no ese tipo de role en la db:
-  const roleExists = await Role.findOne({ role }); //Encuentre un rol como
-  if (!roleExists) {
-    throw new Error(`El role ${role} no existe`);
-  }
+const isRoleValid = async (role = "") => {
+
+      const isRoleInDB = await Role.findOne({ role }); 
+
+      if (!isRoleInDB) {
+
+          throw new Error(`The role ${role} there is not in the DB`);
+        
+        }
+
 };
 
-//verificar si el correo existe// Encuentra uno así:
-const validateEmail = async (email) => {
-  const existeEmail = await Usuario.findOne({ email });
-  if (existeEmail) {
-    throw new Error(`El email ${email} ya existe`);
-  }
+
+const isEmailValid = async (email) => {
+
+      const isEmailInDB = await UserModel.findOne({ email });
+  
+      if (isEmailInDB) {
+        
+            throw new Error(`The email ${email} there is in the DB`);
+      
+      }
+      
 };
 
-//Verificar si existe el usuario existe en la DB
-const validateUserDBById = async (id) => {
-  const userExists = await Usuario.findById(id);
-  if (!userExists) {
-    throw new Error(`The user with ID: ${id} not exists`);
-  }
+
+const isUserValid = async (id) => {
+
+    const isUserInDB = await UserModel.findById(id);
+    
+    if (!isUserInDB) {
+
+        throw new Error(`The user with ID ${id} there is not in the DB`);
+    
+     }
+
 };
 
-//Verify if the id category is registered in the DB
 
-const categoryDBValidation = async (id)=>{
-  const categoryExists = await Category.findById(id); 
-  if (!categoryExists) {
-    throw new Error(`The category with ID: ${id} not exists`);
-  }
+const isEpsValid = async (id)=>{
+
+      const isEpsInDB = await EpsModel.findById(id); 
+  
+      if (!isEpsInDB) {
+            
+          throw new Error(`The EPS with ID: ${id} there is not in the DB`);
+      
+      }
+
 }
+
 module.exports = {
-  esRoleValido,
-  validateEmail, 
-  validateUserDBById, 
-  categoryDBValidation
+   isRoleValid,
+   isEmailValid, 
+   isUserValid, 
+   isEpsValid
 };

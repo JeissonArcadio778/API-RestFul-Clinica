@@ -1,9 +1,9 @@
 const {Schema, model, SchemaType, default: mongoose} = require('mongoose'); 
 
-const categorySchema = Schema({
+const EpsSchema = Schema({
     name: {
         type: String, 
-        required: [true, 'The name is required'], 
+        required: [true, 'The name of Eps is required'], 
         unique: true
     },
     status: {
@@ -11,18 +11,18 @@ const categorySchema = Schema({
         default: true, 
         required: true
     },
-    user: {
+    medical_history: {
         type: Schema.Types.ObjectId,
-        ref: 'Usuario',
+        ref: 'Medical_history',
         required: true
     }
 }); 
 
-categorySchema.methods.toJSON = function() {
-    const {__v, _id:uid, status, ...category} = this.toObject();    
+EpsSchema.methods.toJSON = function() {
+    const {__v, _id:uid, status, ...eps} = this.toObject();    
     return {
-      uid, ...category
+      uid, ...eps
     };
   }
 
-module.exports = model('Category', categorySchema)
+module.exports = model('Eps', EpsSchema)

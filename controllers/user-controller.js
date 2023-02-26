@@ -1,130 +1,93 @@
-// Esta importacion es así para activar las propiedades de response en el controlador. (las funciones que vamos a realizar dentro de la peticion que realizamos)
-//AQUI VA LO QUEREMOS QUE SE HAGA en general
+
 const { response, request } = require("express");
-// Para encriptar la contraseña en respuesta http y db
 const bcrypt = require("bcryptjs");
 
-// Estandar: crearemos instancias del modelo.
-const Usuario = require("../models/usuario");
+const UserModel = require("../models/user");
 
-// METODO GET: servicio para traerme todo de la base de datos
-const usersGet = async (req = request, res = response) => {
-  // Los argumentos enviado en la HTTP con signo de interrogación son considerados como opcionales. Express me los parsea.
-  const { limit = 5, desde = 0 } = req.query;
 
-  const queryModify = { state: true };
+const getUsers = async (req = request, res = response) => {
 
-  // Get de todos los users:
-  // const allUsers = await Usuario.find();
+      const { limit = 5, from = 0 } = req.query;
 
-  // Podemos limitar el numero de usaer del llamado. Debo hacer el casteo! Filtro de USER = ESTADO = TRUE
-  // const allUsers = await Usuario.find(queryModify)
-  //   .skip(Number(desde))
-  //   .limit(Number(limit));
+      const queryModify = { state: true };
+  
+      const [totalUsers, users] = await Promise.all([
+          UserModel.countDocuments(queryModify),
+          UserModel.find(queryModify).skip(Number(from)).limit(Number(limit)),
+      ]);
 
-  // Esto me retornará el total de registros que tenga en la colección users
-  // const totalUsers = await Usuario.countDocuments(queryModify);
-  // Debo tener presente los tiempos de demora de mi código.
-  // Promise.all([]): me permite enviar un arreglo que ejecute las promesas que quiero. Las EJECUTA DE MANERA SIMULTANEA
-
-  const [totalUsers, users] = await Promise.all([
-    Usuario.countDocuments(queryModify),
-    Usuario.find(queryModify).skip(Number(desde)).limit(Number(limit)),
-  ]);
-
-  res.json({
-    msg: "get API - controller - get users",
-    // q,
-    // nombre,
-    // apikey,
-    totalUsers,
-    users,
-  });
+      res.json({
+        msg: "Get Users",
+        totalUsers,
+        users,
+      });
 };
 
-//METODO POST: CREAR USUARIOS
-const usersPost = async (req, res = response) => {
-  // Pequeña desestructuracion y validación. Recoger datos del body. Cuidadeo con los required.
-  // const {name, id} = req.body;
-  const { name, password, email, role } = req.body;
-  // Solo se enviará lo que está definido en el modelo. Solo es la instancia.
-  const usuario = new Usuario({ name, email, password, role });
 
-  //Encriptar password // Hacer el HASH: encriptar en una sola via // Metodo para hacer qué tan complejo es el encripte. 10 por defecto.
-  const salt = bcrypt.genSaltSync();
-  usuario.password = bcrypt.hashSync(password, salt);
+const createUser = async (req, res = response) => {
 
-  // grabo en la DB
-  await usuario.save();
+      const { name, password, email, role } = req.body;
 
-  // VALIDAR LOS ENDPOINDS DE LA MEJOR MANERA
-  res.json({
-    msg: "Post API - controller - Created user",
-    usuario,
-  });
+      const user = new UserModel({ name, email, password, role });
+
+      const salt = bcrypt.genSaltSync();
+      
+      user.password = bcrypt.hashSync(password, salt);
+
+      await user.save();
+
+      res.json({
+        message: "New User Created in the DB",
+        "New User": user,
+      });
 };
 
-// METODO PUT: update info user! Se debe asumir que la info existe.
 
-// Hay cierto tipo de validaciones. Cuando no envian info, misma info a update, etc. Actualizar contra: volver a manipular el hash
+const updateUser = async (req = request, res = response) => {
 
-const usersPut = async (req = request, res = response) => {
-  // Poner datos anviados desde el path. Enviarlos, pero no actualizarlos
-  const { id } = req.params;
+      const { id } = req.params;
 
-  // sacar lo que no quiero actualizar:
-  const { _id, password, google, ...forUpdate } = req.body;
+      const { _id, password, google, ...forUpdate } = req.body;
 
-  //TODO:Si alguien quiere actu algo, debo validar que eso exista
+      if (password) {
 
-  //Encriptar nuevamente la contra
-  if (password) {
-    const salt = bcrypt.genSaltSync();
-    forUpdate.password = bcrypt.hashSync(password, salt);
-  }
-  // Actualizar este resgistro mediante ID
+        const salt = bcrypt.genSaltSync();
+        forUpdate.password = bcrypt.hashSync(password, salt);
+      
+      }
 
-  // The third param is to allow the return of the new object into the DB - after update. Para que la funcion retorn el nuevo usuario actualizado
-  const usuarioDB = await Usuario.findByIdAndUpdate(id, forUpdate, {
-    new: true,
-  });
+      const userUpdated = await UserModel.findByIdAndUpdate(id, forUpdate, { new: true });
 
-  // Debo hacer validaciones de _id de mongo
+      res.json({
+        message: "User Updated in the DB",
+        "User Updated": userUpdated,
+      });
 
-  // Transformar la respues a JSON
-  res.json({
-    msg: "Put API - controller - Update DB",
-    usuarioDB,
-  });
 };
 
-// 'Delete a user'
-const usersDelete = async (req, res = response) => {
-  // Saco el Id de los parametros de la request
-  const { id } = req.params;
 
-  // Se envia desde el body como options
-  // const uid = req.uid;
+const deleteUser = async (req, res = response) => {
+  
+        const { id } = req.params;
 
-  // Borrado físico: No es recomendado porque si ese usuario ha hecho cosas, perdemos la identidad refencial =(
-  // const userDeleted = await Usuario.findByIdAndDelete(id);
-  const userDeleted = await Usuario.findByIdAndUpdate(id, { state: false });
-  // Obtener el user autenticado. Imprimir el user y el user autenticado.
-  // const userAuthe = await Usuario.findById(uid);
+        // const uid = req.uid;
+        // Borrado físico: 
+        // const userDeleted = await Usuario.findByIdAndDelete(id);
 
-  // console.log({userDeleted, userAuthe});
+        const userDeleted = await UserModel.findByIdAndUpdate(id, { state: false });
+        
+        res.json({
+          message: "User deleted from the DB",
+          "User Deleted" : userDeleted,
+          // uid
+          // userAuthe,
+        });
 
-  res.json({
-    msg: "Delete API - controller -  User Deleted!",
-    userDeleted,
-    // uid
-    // userAuthe,
-  });
 };
 
 module.exports = {
-  usersGet,
-  usersPut,
-  usersPost,
-  usersDelete,
+  getUsers,
+  updateUser,
+  createUser,
+  deleteUser,
 };
