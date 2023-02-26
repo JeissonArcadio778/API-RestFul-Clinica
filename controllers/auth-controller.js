@@ -21,10 +21,10 @@ const login =  async (req = request, res = response) =>{
             
             }
 
-            if (!userValidations.state) {
+            if (!userValidations.status) {
                 
                 return res.status(400).json({
-                    msg: "Email / password is not correct - state: false"
+                    msg: "Email / password is not correct - status: false"
                 })
             
             }
@@ -42,7 +42,7 @@ const login =  async (req = request, res = response) =>{
             const token = await generateJWT( userValidations.id )
 
             res.json({
-                msg: 'login - Good!', 
+                message: 'Welcome!!!', 
                 userValidations, 
                 token
             })

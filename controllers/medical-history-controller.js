@@ -49,7 +49,7 @@ const updateMedicalHistory = async (req = request, res = response) => {
             let {_id, uid, name, ...forUpdatedBody} = req.body; 
 
             name = req.body.name.toUpperCase();
-            forUpdated = {name, ...forUpdatedBody}
+            forUpdated = {name, ...forUpdatedBody};
 
             const exist_medical_history = await Medical_history.findById(id); 
 

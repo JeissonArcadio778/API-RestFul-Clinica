@@ -30,7 +30,7 @@ const searchUsers = async (param = '', res = response) =>{
       const user = await User.find({
 
           $or: [{name: regexParam}, {mail: regexParam}],
-          $and: [{state: true}]
+          $and: [{status: true}]
 
       });
 

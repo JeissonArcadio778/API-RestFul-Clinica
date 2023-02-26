@@ -1,6 +1,7 @@
 //Desestrucuturo y traigo una funcion llamada Route. Sirve para yo configurarle las ruta
 const { Router } = require("express");
 const { body, param } = require("express-validator");
+const mongoose = require('mongoose');
 
 const { createUser, getUsers, updateUser, deleteUser } = require("../controllers/user-controller");
 
@@ -8,47 +9,46 @@ const { validateFields } = require("../middlewares/validate-fields");
 const { validateJWT } = require("../middlewares/validate-jwt");
 const { isAdminRole, isRole } = require("../middlewares/validate-role");
 
-
-
-const { isRoleValid, isEmailValid,isUserValid } = require("../helpers/db-validator");
+const { isRoleValid, isEmailValid,isUserValid, isCedulaParmValid } = require("../helpers/db-validator");
 
 const router = Router();
 
-const validateInputs = [
-  body("name", "El nombre es obligatorio").not().isEmpty(),
-  body("email", "El email no es valido").isEmail(),
-  body('email').custom( (email) => isEmailValid(email)),
-  body('password', 'El password es obligatorio').notEmpty(),
-  body('password', 'El password debe ser más de 6 letras').isLength({min:6}),
-  body('role').custom( (role) => isRoleValid(role) ),
+const validateInputsCreate = [
+  body("name", "The name is required").not().isEmpty(),
+  body("cedula", "The cedula is required").not().isEmpty(),
+  body("cedula").custom( (cedula) => isUserValid(cedula)),
+  body("email", "The email is invalid").isEmail(),
+  body("email").custom( (email) => isEmailValid(email)),
+  body("password", "The password is required").notEmpty(),
+  body("password", "Password must be more than 6 letters").isLength({min:6}),
+  body("role").custom( (role) => isRoleValid(role) ),
   validateFields
 ];
 
-const validateUpdate = [
-  body("name", "El nombre es obligatorio").not().isEmpty(),
-  body("email", "El email no es valido").isEmail(),
-  body('password', 'El password es obligatorio').notEmpty(),
-  body('password', 'El password debe ser más de 6 letras').isLength({min:6}),
-  body('role').custom( (role) => esRoleValido(role) ),
-  param('id', 'No es un ID válido').isMongoId(),
-  param('id').custom((id)=> validateUserDBById(id)), 
-  validateFields
-]
-
-const validateDelete = [
+const validateInputsUpdate = [
   validateJWT,
-  isRole('ADMIN_ROLE', 'SALES_ROLE'),
-  param('id', 'No es un ID válido').isMongoId(),
-  param('id').custom((id)=> validateUserDBById(id)), 
+  body("name", "The name is required").not().isEmpty(),
+  body("email", "The email is invalid").isEmail(),
+  body("password", "The password is required").notEmpty(),
+  body("password", "Password must be more than 6 letters").isLength({min:6}),
+  body("role").custom( (role) => isRoleValid(role) ),
+  param("cedula").custom((cedula) => isCedulaParmValid(cedula)),
   validateFields
-]
+];
+
+const validateInputsDelete = [
+  validateJWT,
+  isRole('ADMIN'),
+  param("cedula").custom((cedula) => isCedulaParmValid(cedula)), 
+  validateFields
+];
 
 router.get("/", getUsers);
 
-router.post("/", validateInputs, createUser);
+router.post("/", validateInputsCreate, createUser);
 
-router.put("/:id", validateUpdate, updateUser);
+router.put("/:cedula", validateInputsUpdate, updateUser);
 
-router.delete("/:id", validateDelete, deleteUser);
+router.delete("/:cedula", validateInputsDelete, deleteUser);
 
 module.exports = router;

@@ -1,41 +1,50 @@
 const { Schema, model, default: mongoose } = require("mongoose");
 
 const UserSchema = Schema({
+  _id : {
+      type: String,
+      default: 0
+  },
   cedula: {
     type: Number,
-    required: [true, "La cédula es obligatoria"]
+    required: [true, "The cedula is required"]
   },
   name: {
     type: String,
-    required: [true, "El nombre es obligatorio"],
+    required: [true, "The name is required"],
   },
   email: {
     type: String,
-    required: [true, "El correo es obligatorio"],
+    required: [true, "The email is required"],
     unique: true,
   },
   password: {
     type: String,
-    required: [true, "La contraseña es obligatoria"],
+    required: [true, "The password is required"],
   },
   role: {
     type: String,
     required: true,
   },
-  state: {
+  status: {
     type: Boolean,
     default: true,
-  }
+  },
+  medical_history: {
+    type: Schema.Types.ObjectId,
+    ref: 'Medical_history',
+    // required: true
+},
 });
 
 
 UserSchema.methods.toJSON = function() {
   // Destructuración del objeto- Cambio nombre variable.
 
-  const {__v, password, _id:uid,...user} = this.toObject();
+  const {__v, password, _id:cedula,...user} = this.toObject();
   
   return {
-    uid, ...user
+    cedula, ...user
   };
 }
 

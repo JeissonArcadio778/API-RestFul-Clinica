@@ -15,11 +15,11 @@ const validateJWT = async (req = request, res = response, next) => {
 
         try {
 
-              const {uid} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+              const {cedula} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
               
-              console.log({uid});
+              console.log({cedula});
               
-              const userAuth = await UserModel.findById(uid); 
+              const userAuth = await UserModel.findById(cedula); 
 
               console.log({userAuth});
 
@@ -30,7 +30,7 @@ const validateJWT = async (req = request, res = response, next) => {
                     })
               } 
 
-              if (!userAuth.state) {
+              if (!userAuth.status) {
 
                     return res.status(401).json({
                       message: 'Token no valido. El usuario con estado: false'

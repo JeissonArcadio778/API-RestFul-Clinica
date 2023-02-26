@@ -9,7 +9,8 @@ const MedicalHistorySchema = Schema({
     eps: {
         type: Schema.Types.ObjectId, 
         ref: 'Eps', 
-        required: true
+        required: true,
+        default: "Sin EPS"
     },
     antecedentes : {
         type: String, 

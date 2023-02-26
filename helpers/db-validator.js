@@ -8,7 +8,11 @@ const isRoleValid = async (role = "") => {
 
       if (!isRoleInDB) {
 
-          throw new Error(`The role ${role} there is not in the DB`);
+            if (role == null || role == '') {
+                  throw new Error(`The role is null, please give an option`);
+            }
+          
+            throw new Error(`The role ${role} there is not in the DB`);
         
         }
 
@@ -27,14 +31,26 @@ const isEmailValid = async (email) => {
       
 };
 
+const isCedulaParmValid = async (cedula) => {
 
-const isUserValid = async (id) => {
+      const isCedulaInDB = await UserModel.findOne({cedula});
 
-    const isUserInDB = await UserModel.findById(id);
+      if (!isCedulaInDB) {
+        
+            throw new Error(`The cedula ${cedula} there not is in the DB`);
+      
+      }
+      
+};
+
+
+const isUserValid = async (cedula) => {
+
+    const isUserInDB = await UserModel.findOne({cedula});
     
-    if (!isUserInDB) {
+    if (isUserInDB) {
 
-        throw new Error(`The user with ID ${id} there is not in the DB`);
+        throw new Error(`The user with cedula ${cedula} there is in the DB`);
     
      }
 
@@ -57,5 +73,6 @@ module.exports = {
    isRoleValid,
    isEmailValid, 
    isUserValid, 
-   isEpsValid
+   isEpsValid,
+   isCedulaParmValid
 };
