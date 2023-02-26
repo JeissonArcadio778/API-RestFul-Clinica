@@ -1,21 +1,20 @@
 const { response, request } = require("express");
 const {ObjectId} = require('mongoose').Types;
 
-const User = require('../models/user')
-const Eps = require('../models/eps');
-const Medical_history = require("../models/medical-history");
-const Role = require("../models/role");
+const UserModel = require('../models/user')
+const EpsModel = require('../models/eps');
+const Medical_history_model = require("../models/medical-history");
+const RoleModel = require("../models/role");
+const SpecialtyModel = require("../models/specialty")
 
 
-const allowedCollection = ["users", "eps", "medical_histories", "roles"];
+const allowedCollection = ["users", "eps", "medical_history", "roles", "specialty"];
 
 const searchUsers = async (param = '', res = response) =>{
 
-      const isMongoId = ObjectId.isValid(param); 
+      if (param) {
 
-      if (isMongoId) {
-
-            const user = await User.findById(param);
+            const user = await UserModel.findById(param);
             
             return res.status(200).json({
               success: true, 
@@ -27,7 +26,7 @@ const searchUsers = async (param = '', res = response) =>{
       //Expresión regular
       const regexParam = new RegExp(param, 'i');
 
-      const user = await User.find({
+      const user = await UserModel.find({
 
           $or: [{name: regexParam}, {mail: regexParam}],
           $and: [{status: true}]
@@ -46,7 +45,7 @@ const searchEps = async (param = '', res = response) => {
       //Expresión regular
       const regexParam = new RegExp(param, 'i');
 
-      const eps = await Eps.find({
+      const eps = await EpsModel.find({
 
         $or: [{name: regexParam}],
         $and: [{status: true}]
@@ -65,12 +64,12 @@ const searchMedicalHistories = async (param = '', res = response) => {
  
       const regexParam = new RegExp(param, 'i');
 
-      const medical_history = await Medical_history.find({
+      const medical_history = await Medical_history_model.find({
 
-        $or: [{name: regexParam}],
+        $or: [{user: regexParam},{doctor: regexParam}, {specialty: regexParam}],
         $and: [{status: true}]
 
-      }).populate('user', 'name').populate('eps','name');
+      }).populate('user').populate('specialty', ['status']).populate('doctor', ['name', 'email', 'status']);
 
       return res.json({
           message: true,
@@ -84,7 +83,7 @@ const searchRoles = async (param = '', res = response) => {
    
       const regexParam = new RegExp(param, 'i');
 
-      const role = await Role.find({
+      const role = await RoleModel.find({
 
         $or: [{role: regexParam}]
 
@@ -94,6 +93,24 @@ const searchRoles = async (param = '', res = response) => {
           message: true,
           data: (role)? [role] : []
       })
+}
+
+
+const searchSpecialty = async (param = '', res = response) => {
+
+   
+  const regexParam = new RegExp(param, 'i');
+
+  const specialty = await SpecialtyModel.find({
+
+    $or: [{name: regexParam}]
+
+  });
+
+  return res.json({
+      message: true,
+      data: (specialty)? [specialty] : []
+  })
 }
 
 
@@ -121,12 +138,16 @@ const search = async (req = request, res = response) => {
               await searchEps(param, res); 
               break;
 
-          case "medical_histories":
+          case "medical_history":
               await searchMedicalHistories(param, res); 
               break;
 
-          case 'roles': 
+          case "roles": 
               await searchRoles(param, res)
+              break;
+
+          case "specialty": 
+              await searchSpecialty(param, res)
               break; 
           
           default:
