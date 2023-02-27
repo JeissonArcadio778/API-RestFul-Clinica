@@ -2,7 +2,6 @@
 
 Este repositorio almacena la solución del reto planteado por Heippi. 
 
-
 # Funcionamiento en general y puntos importantes: 
 
 Este sistema permite a distintos roles realizar distintas operaciones a seis tipos de objetos que componen la idea del negocio de las Historias Clinicas (HC); estos objestos son:  
