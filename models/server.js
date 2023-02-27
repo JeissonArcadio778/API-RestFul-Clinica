@@ -9,7 +9,7 @@ class Server {
     constructor(){
         // Creo la app como una propiedad
         this.app = express(); 
-        this.port = process.env.PORT;
+        this.port = process.env.PORT || 3000;
         
         this.paths = {
             user: '/api/users', 
