@@ -4,6 +4,6 @@ const { getRoles } = require('../controllers/roles-controller');
 
 const router = Router();
 
-router.post("/", getRoles); 
+router.get("/", getRoles); 
 
 module.exports = router; 

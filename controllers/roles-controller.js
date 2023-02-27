@@ -1,3 +1,5 @@
+const RolesModel = require("../models/role")
+
 const getRoles = async (req = request, res = response) => {
 
     const { limit = 5, from = 0 } = req.query;
@@ -5,10 +7,10 @@ const getRoles = async (req = request, res = response) => {
     const queryModify = { status: true };
 
     let [totalCountRoles] = await Promise.all([
-      EpsModel.countDocuments(queryModify)]
+      RolesModel.countDocuments(queryModify)]
     );
 
-    listRoles = await EpsModel.find(queryModify).skip(Number(from)).limit(Number(limit)); 
+    listRoles = await RolesModel.find(queryModify).skip(Number(from)).limit(Number(limit)); 
    
     res.json({
       message: "Get roles & total count roles",
