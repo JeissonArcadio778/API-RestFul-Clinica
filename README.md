@@ -60,8 +60,7 @@ Método:  POST
 }
 
 ```
-
-(Después de creados roles, EPSs, y Specialties)
+(Despues de creados roles, EPSs, y Specialties)
 
 
 2. Creación de usuario: 
@@ -119,7 +118,7 @@ Header: xtoken :  eyJhbGciOiJIUzI1N...
 ```
 
 
-*Nota*: La '_id' de eps es su propio nombre es mayusculas, eso es debido a la naturaleza del reto. Enseñar eficiencia. 
+*Nota*: La '_id' de eps es su propio nombre es mayusculas, eso es debido a la naturaleza del reto. Enseñar eficiencia. Esto también sucede con el usuario, la llave definida para este su propia cédula.
 
 3. Creación de la Medical History: 
 
