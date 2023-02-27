@@ -83,7 +83,9 @@ const updateEps = async (req = request, res = response) => {
           let {_id, name, ...forUpdatedBody} = req.body; 
           
           name = req.body.name.toUpperCase();
-          forUpdated = {name, ...forUpdatedBody}
+          _id = name; 
+          
+          forUpdated = {name, _id, ...forUpdatedBody}
           
           try {
                 const epsUpdated = await EpsModel.findOneAndUpdate(id, forUpdated, {new : true}); 
