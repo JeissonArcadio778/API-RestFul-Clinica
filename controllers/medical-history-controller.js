@@ -27,10 +27,10 @@ const createMedicalHistory = async (req = request, res = response) => {
                     ...body,
                 } 
 
-                const medical_history = new Medical_history(data_medical_history)
+                const medical_history = new Medical_history(data_medical_history);
                 await medical_history.save(); 
 
-                console.log({medical_history });
+                console.log({medical_history});
 
                 return res.status(200).json({
                     message: 'Medical History Created',
