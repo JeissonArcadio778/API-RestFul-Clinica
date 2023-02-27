@@ -56,6 +56,18 @@ const isUserValid = async (cedula) => {
 
 };
 
+const isCedulaValid = async (cedula) => {
+
+      const isUserInDB = await UserModel.findOne({cedula});
+      
+      if (isUserInDB) {
+  
+          throw new Error(`The user with cedula ${cedula} there is in the DB`);
+      
+       }
+  
+};
+
 
 const isEpsValid = async ( eps ) => {
 
@@ -86,5 +98,6 @@ module.exports = {
    isUserValid, 
    isEpsValid,
    isCedulaParmValid,
-   isSpecialtyValid
+   isSpecialtyValid, 
+   isCedulaValid
 };

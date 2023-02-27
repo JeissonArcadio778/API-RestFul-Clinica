@@ -9,11 +9,12 @@ const { validateFields } = require("../middlewares/validate-fields");
 const { validateJWT } = require("../middlewares/validate-jwt");
 const { isAdminRole, isRole } = require("../middlewares/validate-role");
 
-const { isRoleValid, isEmailValid,isUserValid, isCedulaParmValid, isEpsValid } = require("../helpers/db-validator");
+const { isRoleValid, isEmailValid,isUserValid, isCedulaParmValid, isEpsValid, isCedulaValid } = require("../helpers/db-validator");
 
 const router = Router();
 
 const validateInputsCreate = [
+  validateJWT,
   body("first_name", "The name is required").not().isEmpty(),
   body("cedula", "The cedula is required").not().isEmpty(),
   body("id").custom( (id) => isUserValid(id)),
@@ -23,6 +24,7 @@ const validateInputsCreate = [
   body("password", "Password must be more than 6 letters").isLength({min:6}),
   body("role").custom((role) => isRoleValid(role)),
   body("eps").custom((eps) => isEpsValid(eps)),
+  body("cedula").custom((cedula) => isCedulaValid(cedula)),
   validateFields
 ];
 

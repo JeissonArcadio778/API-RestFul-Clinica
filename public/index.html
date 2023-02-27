@@ -1,12 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>API REST Sistema de gestión de Historias médicas</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <title>API REST</title>
+  </head>
+  <body>
+    <header>
+      <h1>API REST - Sistema de Historial Clínico</h1>
+    </header>
+    <main>
+      <aside>
+        <div>
+          <h3>Users</h3>
+          <p>Entidades implicadas en el sistema</p>
+          <a href="https://heippi-api-rest-historia-clinica-production.up.railway.app/api/users">Get Users</a>
+        </div>
+        <div>
+            <h3>Roles</h3>
+            <p>Pueden ser cuatro tipos: ADMIN, PATIENT, DOCTOR, NURSE.</p>
+            <a href="https://heippi-api-rest-historia-clinica-production.up.railway.app/api/roles">Get Roles</a>
+        </div>
+        <div>
+            <h3>Specialty</h3>
+            <p>Las historias médicas comunmente se categorizan según la especialidad a la que se le atribuye cuidado.</p>
+            <a href="https://heippi-api-rest-historia-clinica-production.up.railway.app/api/specialty">Get Specialty</a>
+        </div>
+        <div>
+            <h3>Medical History</h3>
+            <p>Es un documento imprescindible para guardar toda la información relativa a la salud de un paciente y los servicios prestados al mismo.</p>
+            <a href="https://heippi-api-rest-historia-clinica-production.up.railway.app/api/medical_history">Get Medical History</a>
+        </div>
+      </aside>
+    </main>
+    <footer>
+      <div class="footer-info">@jeissonarcadio778</div>
+    </footer>
+  </body>
 </html>
