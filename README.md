@@ -21,7 +21,7 @@ Este sistema permite a distintos roles realizar distintas operaciones a seis tip
 Este sistema conecta el resto de operaciones dentro de la lógica del negocio. Por ejemplo, permite buscar por HC y Specialty, HC y PATIENT, HC y DOCTOR; buscar por correo/ entre Users, entre otros, y todo desde una misma URL. Esto se basa en la busqueda por collection y parameter de sistemas de producción reales. 
 
 
-# ¿Cómo estás organizado el proyecto? 
+## ¿Cómo está organizado el proyecto? 
 
 Este sistema hace uso de clases y objetos de manera continua, puesto que permite orquestar todo un sistema orientado a la creación y adición de módulos en el mismo. 
 
