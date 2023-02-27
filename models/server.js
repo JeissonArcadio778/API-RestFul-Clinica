@@ -18,6 +18,7 @@ class Server {
             medical_history: '/api/medical_history',
             specialty: '/api/specialty',
             search: '/api/search',
+            roles: '/api/roles'
         }
 
         this.conectarDB(); 
@@ -53,6 +54,7 @@ class Server {
         this.app.use(this.paths.medical_history, require('../routes/medical-history.routes'))
         this.app.use(this.paths.search, require('../routes/search.routes'))
         this.app.use(this.paths.specialty, require('../routes/specialty.routes'))
+        this.app.use(this.paths.roles, require('../routes/roles.routes'))
 
     }
 
